@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Selection Sort 視覺化</title>
+
+<style>
+body{
+    font-family: Arial;
+    text-align:center;
+    background:#f4f4f4;
+}
+
+#container{
+    margin-top:40px;
+}
+
+.bar{
+    display:inline-block;
+    width:40px;
+    margin:2px;
+    background:#3498db;
+    color:white;
+}
+
+button{
+    padding:10px 20px;
+    font-size:16px;
+    margin:10px;
+}
+</style>
+
+</head>
+
+<body>
+
+<h1>選擇排序法 Selection Sort</h1>
+
+<a href="index.html" style="display: inline-block; padding: 10px 20px; margin: 10px; background: #3498db; color: white; text-decoration: none; border-radius: 5px; font-size: 16px;">← 返回主頁</a>
+
+<input id="numbers" placeholder="例如: 8,3,1,6,2">
+<br><br>
+
+<button onclick="startSort()">開始排序</button>
+
+<div id="container"></div>
+
+<script>
+
+let arr=[];
+
+function drawArray(highlightIndex = -1, minIndex = -1){
+
+    let container=document.getElementById("container");
+    container.innerHTML="";
+
+    for(let i=0;i<arr.length;i++){
+
+        let bar=document.createElement("div");
+        bar.className="bar";
+        bar.style.height=arr[i]*20+"px";
+        bar.innerText=arr[i];
+
+        // 比較中的元素（紅色）
+        if(i === highlightIndex){
+            bar.style.background="red";
+        }
+
+        // 當前最小值（綠色）
+        if(i === minIndex){
+            bar.style.background="green";
+        }
+
+        container.appendChild(bar);
+    }
+}
+
+function sleep(ms){
+    return new Promise(resolve=>setTimeout(resolve,ms));
+}
+
+async function selectionSort(){
+
+    let n = arr.length;
+
+    for(let i = 0; i < n; i++){
+
+        let minIndex = i;
+
+        for(let j = i + 1; j < n; j++){
+
+            drawArray(j, minIndex);
+            await sleep(300);
+
+            if(arr[j] < arr[minIndex]){
+                minIndex = j;
+            }
+        }
+
+        if(minIndex !== i){
+
+            let temp = arr[i];
+            arr[i] = arr[minIndex];
+            arr[minIndex] = temp;
+
+            drawArray(i, minIndex);
+            await sleep(500);
+        }
+    }
+
+    // 最後全部變綠（排序完成）
+    drawArray();
+}
+
+async function startSort(){
+
+    let input=document.getElementById("numbers").value;
+
+    arr=input.split(",").map(Number);
+
+    drawArray();
+
+    await selectionSort();
+}
+
+</script>
+
+</body>
+</html>

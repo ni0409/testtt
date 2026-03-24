@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insertion Sort 視覺化</title>
+
+<style>
+body{
+    font-family: Arial;
+    text-align:center;
+    background:#f4f4f4;
+}
+
+#container{
+    margin-top:40px;
+}
+
+.bar{
+    display:inline-block;
+    width:40px;
+    margin:2px;
+    background:#3498db;
+    color:white;
+}
+
+button{
+    padding:10px 20px;
+    font-size:16px;
+    margin:10px;
+}
+</style>
+
+</head>
+
+<body>
+
+<h1>插入排序法 Insertion Sort</h1>
+
+<a href="index.html" style="display: inline-block; padding: 10px 20px; margin: 10px; background: #3498db; color: white; text-decoration: none; border-radius: 5px; font-size: 16px;">← 返回主頁</a>
+
+<input id="numbers" placeholder="例如: 8,3,1,6,2">
+<br><br>
+
+<button onclick="startSort()">開始排序</button>
+
+<div id="container"></div>
+
+<script>
+
+let arr=[];
+
+function drawArray(currentIndex = -1, sortedBoundary = -1){
+
+    let container=document.getElementById("container");
+    container.innerHTML="";
+
+    for(let i=0;i<arr.length;i++){
+
+        let bar=document.createElement("div");
+        bar.className="bar";
+        bar.style.height=arr[i]*20+"px";
+        bar.innerText=arr[i];
+
+        // 當前處理的元素（紅色）
+        if(i === currentIndex){
+            bar.style.background="red";
+        }
+
+        // 已排序區域（綠色）
+        if(i <= sortedBoundary){
+            bar.style.background="green";
+        }
+
+        container.appendChild(bar);
+    }
+}
+
+function sleep(ms){
+    return new Promise(resolve=>setTimeout(resolve,ms));
+}
+
+async function insertionSort(){
+
+    let n = arr.length;
+
+    for(let i = 1; i < n; i++){
+
+        let key = arr[i];
+        let j = i - 1;
+
+        drawArray(i, i-1);
+        await sleep(400);
+
+        while(j >= 0 && arr[j] > key){
+
+            arr[j + 1] = arr[j];
+
+            drawArray(j, i-1);
+            await sleep(400);
+
+            j--;
+        }
+
+        arr[j + 1] = key;
+
+        drawArray(j + 1, i);
+        await sleep(500);
+    }
+
+    // 最後全部變綠
+    drawArray(-1, n-1);
+}
+
+async function startSort(){
+
+    let input=document.getElementById("numbers").value;
+
+    arr=input.split(",").map(Number);
+
+    drawArray();
+
+    await insertionSort();
+}
+
+</script>
+
+</body>
+</html>
